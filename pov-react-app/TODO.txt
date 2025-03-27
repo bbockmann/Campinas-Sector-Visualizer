@@ -1,0 +1,4 @@
+Create search function to highlight a sector via its ID
+Option to toggle showing/hidding POIs
+Only show one sector's POIs at a time
+Host with vercel
