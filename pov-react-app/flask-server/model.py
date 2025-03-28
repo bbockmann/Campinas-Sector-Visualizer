@@ -7,13 +7,13 @@ app = Flask(__name__)
 
 CSV_FILE_PATH = "/Users/bennybock1/Desktop/pov-react-app/public/data/pois_by_census_sector 2022.csv"
 
-try:
-    poi_df = pd.read_csv(CSV_FILE_PATH)
-    # poi_df = poi_df.set_index("name")
-    print(f"CSV loaded successfully! {poi_df.shape[0]} rows found.")
-except FileNotFoundError:
-    print("Error: CSV file not found. Check the file path.")
-    poi_df = None
+# try:
+#     poi_df = pd.read_csv(CSV_FILE_PATH)
+#     # poi_df = poi_df.set_index("name")
+#     print(f"CSV loaded successfully! {poi_df.shape[0]} rows found.")
+# except FileNotFoundError:
+#     print("Error: CSV file not found. Check the file path.")
+#     poi_df = None
 
 # test_row = poi_df[poi_df['census_sector_code'] == "350950205000001P"].iloc[0]
 # test_row = poi_df.loc["350950205000001P"]
