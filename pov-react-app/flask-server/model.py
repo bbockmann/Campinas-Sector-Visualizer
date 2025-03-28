@@ -35,6 +35,9 @@ def poi(sector_id):
 
 
 
+@app.route("/")
+def root():
+    return "this is the root of the server"
 
 @app.route("/test")
 def members():
