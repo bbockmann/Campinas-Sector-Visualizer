@@ -19,7 +19,9 @@
     "start-api": "cd model_api && venv/bin/flask run --no-debugger",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -40,7 +42,9 @@
     ]
   },
   "devDependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "gh-pages": "^6.3.0"
   },
-  "proxy": "http://localhost:5001"
+  "proxy": "http://localhost:5001",
+  "homepage": "https://bbockmann.github.io/pov-predict-app"
 }
