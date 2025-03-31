@@ -47,13 +47,7 @@ def proxy_json():
 
 @app.route("/poi/<sector_id>")
 def poi(sector_id):
-    # row = poi_df[poi_df['census_sector_code'] == sectorid].to_json()
-    # return row
-    print("getting pois for " + sector_id)
-    test_row = poi_df[poi_df['census_sector_code'] == sector_id].to_json()
-    # test_row = poi_df.loc["350950205000001P"]
-    # test_row = "test"
-    return test_row
+    return poi_df[poi_df['census_sector_code'] == sector_id].to_json()
 
 
 
