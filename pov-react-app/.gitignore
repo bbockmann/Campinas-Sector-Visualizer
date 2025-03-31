@@ -6,8 +6,6 @@
 .pnp.js
 venv
 
-# public files
-/public
 # testing
 /coverage
 
