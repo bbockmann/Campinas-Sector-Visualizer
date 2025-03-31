@@ -1,6 +1,5 @@
 from flask import Flask
 import pandas as pd
-import os
 import io
 import requests
 from flask_cors import CORS
