@@ -8,6 +8,7 @@ import POI from "./POI";
 // );
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 console.log(API_BASE_URL);
+console.log("first test for pushing to github. does it update?");
 
 export default function Map() {
     const [selectedSectorData, setSelectedSectorData] = useState(null);
