@@ -40,5 +40,4 @@ gunicorn
 pandas
 flask
 requests
-io
 flask_cors
