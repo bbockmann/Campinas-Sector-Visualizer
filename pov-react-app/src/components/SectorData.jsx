@@ -2,7 +2,9 @@
 
 const SectorData = ({ data }) => {
     if (data) {
-        let img_url = `/data/images_2022/satellite_image_${data.CD_SETO}_1.png`;
+        console.log("loading image from google");
+        let gcsImgUrl = `https://storage.cloud.google.com/campinas-data/images_2022/images_2022/satellite_image_${data.CD_SETO}_1.png`;
+        // let img_url = `/data/images_2022/satellite_image_${data.CD_SETO}_1.png`;
         // console.log(`Retrieving image for ${data.CD_SETO}`);
         // console.log(img_url);
 
@@ -18,7 +20,7 @@ const SectorData = ({ data }) => {
                 </ul>
                 <img
                     className="sector-img"
-                    src={img_url}
+                    src={gcsImgUrl}
                     alt="no sector photo available"
                 />
             </div>

@@ -39,3 +39,6 @@ wcwidth==0.2.13
 gunicorn
 pandas
 flask
+requests
+io
+flask_cors

@@ -3,7 +3,11 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import SectorData from "./SectorData";
 import POI from "./POI";
 
-// const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+// const { AdvancedMarkerElement } = await window.google.maps.importLibrary(
+//     "marker"
+// );
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+console.log(API_BASE_URL);
 
 export default function Map() {
     const [selectedSectorData, setSelectedSectorData] = useState(null);
@@ -21,7 +25,7 @@ export default function Map() {
     ];
 
     const handleOnLoad = (map) => {
-        fetch("/data/final_cadunico_setores.json")
+        fetch(`${API_BASE_URL}/proxy-json`)
             .then((response) => response.json())
             .then((data) => {
                 // Add the GeoJSON data to the map
@@ -67,7 +71,7 @@ export default function Map() {
     function plotPOIs(sectorID, map) {
         // console.log(sectorID);
         console.log(`the new sectorID is ${sectorID}`);
-        fetch(`/poi/${sectorID}`)
+        fetch(`${API_BASE_URL}/poi/${sectorID}`)
             .then((res) => res.json())
             .then((data) => {
                 // console.log(Object.keys(data.name).length);
@@ -116,7 +120,10 @@ export default function Map() {
 
     return (
         <div>
-            <LoadScript googleMapsApiKey={process.env.REACT_APP_MAPS_API_KEY}>
+            <LoadScript
+                googleMapsApiKey={process.env.REACT_APP_MAPS_API_KEY}
+                libraries={["marker"]}
+            >
                 <div style={{ height: "100vh" }}>{mapComponent}</div>
             </LoadScript>
             <SectorData data={selectedSectorData} />
