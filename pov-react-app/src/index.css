@@ -17,11 +17,21 @@ code {
     monospace;
 }
 
+/* Styles for the map */
+.poi-marker {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: rgb(164, 41, 31);
+  border: 1px white solid;
+}
+
+
 /* Styles for SectorData */
 .sector-data-wrap {
   background-color: white;
   position: absolute;
-  bottom: 10px;
+  bottom: 30px;
   left: 10px;
   padding: 10px;
   border-radius: 2px;

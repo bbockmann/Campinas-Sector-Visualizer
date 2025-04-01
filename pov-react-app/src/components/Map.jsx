@@ -8,12 +8,24 @@ import POI from "./POI";
 // );
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const libraries = ["marker"];
+const defaultSectorStyles = {
+    fillColor: "rgb(200, 201, 205)",
+    strokeWeight: 2,
+    strokeColor: "rgb(150, 151, 155)",
+};
+
+const selectedSectorStyles = {
+    fillColor: "rgb(228, 207, 136)",
+    strokeWeight: 2,
+    strokeColor: "rgb(228, 207, 136)",
+};
 
 export default function Map() {
+    const [map, setMap] = useState(null);
     const [selectedSectorData, setSelectedSectorData] = useState(null);
     const selectedSectorRef = useRef(null);
-    const [selectedSectorID, setSelectedSectodID] = useState(null);
-    const [currPOIs, setCurrPOIs] = useState(null);
+    // const [selectedSectorID, setSelectedSectodID] = useState(null);
 
     const center = { lng: -47.054908, lat: -22.9036219989999 };
     const mapStyles = [
@@ -25,6 +37,7 @@ export default function Map() {
     ];
 
     const handleOnLoad = (map) => {
+        setMap(map);
         fetch(`${API_BASE_URL}/proxy-json`)
             .then((response) => response.json())
             .then((data) => {
@@ -35,11 +48,7 @@ export default function Map() {
                 console.error("Error loading GeoJSON", err);
             });
 
-        map.data.setStyle({
-            fillColor: "DarkSlateGray",
-            strokeWeight: 2,
-            strokeColor: "DarkSlateGray",
-        });
+        map.data.setStyle(defaultSectorStyles);
 
         map.data.addListener("click", (e) => {
             setSelectedSectorData((prev) => {
@@ -47,52 +56,21 @@ export default function Map() {
                 return e.feature.Fg;
             });
 
-            let sectorID = e.feature.Fg.CD_SETO;
-            plotPOIs(sectorID, map);
-
             if (selectedSectorRef.current) {
-                map.data.overrideStyle(selectedSectorRef.current, {
-                    fillColor: "DarkSlateGray", // Reset to default
-                    strokeWeight: 2,
-                    strokeColor: "DarkSlateGray",
-                });
+                map.data.overrideStyle(
+                    selectedSectorRef.current,
+                    defaultSectorStyles
+                );
             }
 
             selectedSectorRef.current = e.feature;
 
-            map.data.overrideStyle(selectedSectorRef.current, {
-                fillColor: "Yellow", // Reset to default
-                strokeWeight: 2,
-                strokeColor: "DarkSlateGray",
-            });
+            map.data.overrideStyle(
+                selectedSectorRef.current,
+                selectedSectorStyles
+            );
         });
     };
-
-    function plotPOIs(sectorID, map) {
-        // console.log(sectorID);
-        console.log(`the new sectorID is ${sectorID}`);
-        fetch(`${API_BASE_URL}/poi/${sectorID}`)
-            .then((res) => res.json())
-            .then((data) => {
-                // console.log(Object.keys(data.name).length);
-                let latKeys = Object.keys(data.latitude);
-
-                for (let i = 0; i < Object.keys(data.name).length; i++) {
-                    // TODO: move all this logic of creating each pin to the python code
-                    // the API should provide a nice json object so that each
-                    // pin can be rapidly created
-                    let key = latKeys[i];
-                    const marker = new window.google.maps.Marker({
-                        map,
-                        position: {
-                            lat: data.latitude[key],
-                            lng: data.longitude[key],
-                        },
-                    });
-                }
-                // setCurrPOIs(data);
-            });
-    }
 
     const handleOnClick = (map) => {
         setSelectedSectorData(null);
@@ -105,7 +83,9 @@ export default function Map() {
                 center={center}
                 mapContainerStyle={{ height: "100%", width: "100%" }}
                 options={{
-                    styles: mapStyles,
+                    mapId: "8f55d545b329347",
+                    styleId: "3096ca06b76b1951",
+                    // styles: mapStyles,
                     gestureHandling: "greedy",
                     disableDefaultUI: false,
                     zoomControl: true,
@@ -122,12 +102,12 @@ export default function Map() {
         <div>
             <LoadScript
                 googleMapsApiKey={process.env.REACT_APP_MAPS_API_KEY}
-                libraries={["marker"]}
+                libraries={libraries}
             >
                 <div style={{ height: "100vh" }}>{mapComponent}</div>
             </LoadScript>
             <SectorData data={selectedSectorData} />
-            <POI id={selectedSectorID} />
+            <POI data={selectedSectorData} map={map} />
         </div>
     );
 }
