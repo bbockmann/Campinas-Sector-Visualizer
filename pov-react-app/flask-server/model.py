@@ -40,6 +40,10 @@ def root():
 def members():
     return {"message": "this is the test api working!"}
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200 
+
 if __name__ == "__main__":
     # print(app.url_map)  # Debugging: Check if routes are correctly loaded
     # app.run(debug=True, port=5001)

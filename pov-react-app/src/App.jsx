@@ -11,14 +11,20 @@ function App() {
             setLoading(true);
             try {
                 const response = await fetch(`${API_BASE_URL}/`);
+                if (!response.ok) throw new Error("Server is not ready");
+                console.log("Backend is live!");
+                setLoading(false);
             } catch (e) {
                 console.log("Error starting backend server", e);
+                console.error("Retrying in 5 seconds...");
+                setTimeout(startFlaskServer, 5000); // Retry after 5 seconds
             } finally {
-                setLoading(false);
+                // setLoading(false);
             }
         };
         startFlaskServer();
     }, []);
+
     return loading ? <LoadingScreen /> : <Map />;
 
     // const test = async () => {
