@@ -48,9 +48,6 @@ def proxy_json():
 def poi(sector_id):
     return poi_df[poi_df['census_sector_code'] == sector_id].to_json()
 
-
-
-
 @app.route("/")
 def root():
     return "this is the root of the server"
