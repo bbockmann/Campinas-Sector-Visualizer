@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import io
 from flask_cors import CORS
-
+from os import environ
 
 
 app = Flask(__name__)
@@ -13,22 +13,6 @@ CORS(app)  # Apply CORS to all routes
 
 CSV_FILE_PATH = "/Users/bennybock1/Desktop/pov-react-app/public/data/pois_by_census_sector 2022.csv"
 GOOGLE_CSV_LINK = "https://storage.googleapis.com/campinas-data/pois_by_census_sector%202022.csv"
-
-
-# For LOCAL file
-# try:
-#     poi_df = pd.read_csv(CSV_FILE_PATH)
-#     # poi_df = poi_df.set_index("name")
-#     print(f"CSV loaded successfully! {poi_df.shape[0]} rows found.")
-# except FileNotFoundError:
-#     print("Error: CSV file not found. Check the file path.")
-#     poi_df = None
-
-# test_row = poi_df[poi_df['census_sector_code'] == "350950205000001P"].iloc[0]
-# test_row = poi_df.loc["350950205000001P"]
-
-# print("************")
-# print(test_row)
 
 # For GCS file
 poi_csv_response = requests.get(GOOGLE_CSV_LINK)
@@ -57,6 +41,8 @@ def members():
     return {"message": "this is the test api working!"}
 
 if __name__ == "__main__":
-    print(app.url_map)  # Debugging: Check if routes are correctly loaded
-    app.run(debug=True, port=5001)
+    # print(app.url_map)  # Debugging: Check if routes are correctly loaded
+    # app.run(debug=True, port=5001)
+    app.run(debug=True, host="0.0.0.0", port=int(environ.get("PORT", 10000)))
+
 
