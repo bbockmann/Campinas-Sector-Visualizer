@@ -7,19 +7,14 @@ from os import environ
 
 
 app = Flask(__name__)
-# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 CORS(app)  # Apply CORS to all routes
 
-
-CSV_FILE_PATH = "/Users/bennybock1/Desktop/pov-react-app/public/data/pois_by_census_sector 2022.csv"
 GOOGLE_CSV_LINK = "https://storage.googleapis.com/campinas-data/pois_by_census_sector%202022.csv"
 
 # For GCS file
 poi_csv_response = requests.get(GOOGLE_CSV_LINK)
 poi_csv = poi_csv_response.text
 poi_df = pd.read_csv(io.StringIO(poi_csv))
-
-# print(poi_df.head())
 
 @app.route("/proxy-json")
 def proxy_json():

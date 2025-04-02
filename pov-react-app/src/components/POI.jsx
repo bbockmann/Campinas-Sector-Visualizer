@@ -1,4 +1,3 @@
-// import React from "react";
 import { useEffect, useRef } from "react";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -16,7 +15,6 @@ export default function POI({ data, map }) {
         fetch(`${API_BASE_URL}/poi/${sectorId}`)
             .then((res) => res.json())
             .then((data) => {
-                // console.log(Object.keys(data.name).length);
                 let latKeys = Object.keys(data.latitude);
 
                 for (let i = 0; i < Object.keys(data.name).length; i++) {

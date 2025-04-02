@@ -1,14 +1,11 @@
 import React, { useState, useRef, useMemo } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import SectorData from "./SectorData";
 import POI from "./POI";
 
-// const { AdvancedMarkerElement } = await window.google.maps.importLibrary(
-//     "marker"
-// );
-
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const libraries = ["marker"];
+
 const defaultSectorStyles = {
     fillColor: "rgb(200, 201, 205)",
     strokeWeight: 2,
@@ -25,7 +22,6 @@ export default function Map() {
     const [map, setMap] = useState(null);
     const [selectedSectorData, setSelectedSectorData] = useState(null);
     const selectedSectorRef = useRef(null);
-    // const [selectedSectorID, setSelectedSectodID] = useState(null);
 
     const center = { lng: -47.054908, lat: -22.9036219989999 };
     const mapStyles = [
@@ -41,7 +37,6 @@ export default function Map() {
         fetch(`${API_BASE_URL}/proxy-json`)
             .then((response) => response.json())
             .then((data) => {
-                // Add the GeoJSON data to the map
                 map.data.addGeoJson(data);
             })
             .catch((err) => {

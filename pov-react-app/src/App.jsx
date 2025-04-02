@@ -11,14 +11,16 @@ function App() {
         const startFlaskServer = async () => {
             setLoading(true);
             try {
+                console.log("HELLO");
                 const response = await fetch(`${API_BASE_URL}/`);
+                console.log(response);
                 if (!response.ok) throw new Error("Server is not ready");
                 console.log("Backend is live!");
                 setLoading(false);
             } catch (e) {
                 console.log("Error starting backend server", e);
-                console.error("Retrying in 5 seconds...");
-                setTimeout(startFlaskServer, 5000); // Retry after 5 seconds
+                console.error("Retrying in 10 seconds...");
+                setTimeout(startFlaskServer, 10000); // Retry after 5 seconds
             } finally {
                 // setLoading(false);
             }
@@ -27,23 +29,6 @@ function App() {
     }, []);
 
     return loading ? <LoadingScreen /> : <Map />;
-
-    // const test = async () => {
-    //     try {
-    //         console.log("in try, before fetch");
-    //         const response = await fetch(`${API_BASE_URL}/`);
-    //         console.log("in try, after fetch");
-    //     } catch (e) {
-    //         console.log("Error starting backend server", e);
-    //     } finally {
-    //         console.log("in finally");
-    //     }
-    // };
-    // console.log("before calling test");
-    // test();
-    // console.log("after calling test");
-
-    return <Map />;
 }
 
 export default App;
