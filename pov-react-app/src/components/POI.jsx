@@ -3,12 +3,12 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function POI({ data, map }) {
     const markersRef = useRef([]); // Store markers
-    console.log("this runs");
 
     useEffect(() => {
-        if (!data) return;
         markersRef.current.forEach((marker) => marker.setMap(null));
         markersRef.current = [];
+
+        if (!data) return;
 
         let sectorId = data.CD_SETO;
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import LoadingScreen from "./components/LoadingScreen";
+import Header from "./components/Header";
 import Map from "./components/Map";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -11,9 +12,7 @@ function App() {
         const startFlaskServer = async () => {
             setLoading(true);
             try {
-                console.log("HELLO");
                 const response = await fetch(`${API_BASE_URL}/`);
-                console.log(response);
                 if (!response.ok) throw new Error("Server is not ready");
                 console.log("Backend is live!");
                 setLoading(false);
@@ -28,7 +27,12 @@ function App() {
         startFlaskServer();
     }, []);
 
-    return loading ? <LoadingScreen /> : <Map />;
+    return (
+        <div className="header-content-wrap">
+            <Header />
+            {loading ? <LoadingScreen /> : <Map />}
+        </div>
+    );
 }
 
 export default App;

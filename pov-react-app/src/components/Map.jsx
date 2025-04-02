@@ -20,6 +20,7 @@ const selectedSectorStyles = {
 
 export default function Map() {
     const [map, setMap] = useState(null);
+    const mapRef = useRef(null);
     const [selectedSectorData, setSelectedSectorData] = useState(null);
     const selectedSectorRef = useRef(null);
 
@@ -33,6 +34,8 @@ export default function Map() {
     ];
 
     const handleOnLoad = (map) => {
+        console.log("setting mapRef.current");
+        mapRef.current = map;
         setMap(map);
         fetch(`${API_BASE_URL}/proxy-json`)
             .then((response) => response.json())
@@ -67,7 +70,17 @@ export default function Map() {
         });
     };
 
-    const handleOnClick = (map) => {
+    const handleOnClick = () => {
+        if (!mapRef.current) {
+            console.warn("Map is not loaded yet");
+            return;
+        }
+        mapRef.current.data.overrideStyle(
+            selectedSectorRef.current,
+            defaultSectorStyles
+        );
+
+        console.log("sector should be reset");
         setSelectedSectorData(null);
     };
 
@@ -94,14 +107,16 @@ export default function Map() {
     );
 
     return (
-        <div>
+        <div style={{ height: "100%" }}>
             <LoadScript
                 googleMapsApiKey={process.env.REACT_APP_MAPS_API_KEY}
                 libraries={libraries}
             >
-                <div style={{ height: "100vh" }}>{mapComponent}</div>
+                <div className="map-container">
+                    {mapComponent}
+                    <SectorData data={selectedSectorData} />
+                </div>
             </LoadScript>
-            <SectorData data={selectedSectorData} />
             <POI data={selectedSectorData} map={map} />
         </div>
     );

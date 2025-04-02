@@ -6,11 +6,14 @@ const SectorData = ({ data }) => {
             <div className="sector-data-wrap">
                 <h3>Sector Data</h3>
                 <ul>
-                    {Object.entries(data).map(([key, value]) => (
+                    {/* {Object.entries(data).map(([key, value]) => (
                         <li key={key}>
                             <strong>{key}:</strong> {value}
                         </li>
-                    ))}
+                    ))} */}
+                    <li>
+                        <strong>CD_SETO</strong> {data.CD_SETO}
+                    </li>
                 </ul>
                 <img
                     className="sector-img"
