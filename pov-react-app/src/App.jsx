@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import LoadingScreen from "./components/LoadingScreen";
 import Header from "./components/Header";
 import Map from "./components/Map";
+import SearchProvider from "./components/SearchProvider";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -29,8 +30,10 @@ function App() {
 
     return (
         <div className="header-content-wrap">
-            <Header />
-            {loading ? <LoadingScreen /> : <Map />}
+            <SearchProvider>
+                <Header />
+                {loading ? <LoadingScreen /> : <Map />}
+            </SearchProvider>
         </div>
     );
 }

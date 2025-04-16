@@ -1,7 +1,7 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import SectorData from "./SectorData";
-import POI from "./POI";
+import { useSearch } from "./SearchProvider";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const libraries = ["marker"];
@@ -24,6 +24,24 @@ export default function Map() {
     const [selectedSectorData, setSelectedSectorData] = useState(null);
     const selectedSectorRef = useRef(null);
 
+    const { sectorQuery } = useSearch();
+
+    useEffect(() => {
+        if (!sectorQuery || !mapRef.current) return;
+        mapRef.current.data.forEach((feature) => {
+            if (feature.getProperty("CD_SETO") === sectorQuery) {
+                console.log(feature.getProperty("CD_SETO"));
+                styleAndSetSector(feature);
+
+                const bounds = new window.google.maps.LatLngBounds();
+                feature
+                    .getGeometry()
+                    .forEachLatLng((latlng) => bounds.extend(latlng));
+                mapRef.current.fitBounds(bounds);
+            }
+        });
+    }, [sectorQuery]);
+
     const center = { lng: -47.054908, lat: -22.9036219989999 };
     const mapStyles = [
         {
@@ -33,8 +51,28 @@ export default function Map() {
         },
     ];
 
+    const styleAndSetSector = (feature) => {
+        setSelectedSectorData((prev) => {
+            if (prev === feature.Fg) return prev; // No change, avoid re-render
+            return feature.Fg;
+        });
+
+        if (selectedSectorRef.current) {
+            mapRef.current.data.overrideStyle(
+                selectedSectorRef.current,
+                defaultSectorStyles
+            );
+        }
+
+        selectedSectorRef.current = feature;
+
+        mapRef.current.data.overrideStyle(
+            selectedSectorRef.current,
+            selectedSectorStyles
+        );
+    };
+
     const handleOnLoad = (map) => {
-        console.log("setting mapRef.current");
         mapRef.current = map;
         setMap(map);
         fetch(`${API_BASE_URL}/proxy-json`)
@@ -49,24 +87,7 @@ export default function Map() {
         map.data.setStyle(defaultSectorStyles);
 
         map.data.addListener("click", (e) => {
-            setSelectedSectorData((prev) => {
-                if (prev === e.feature.Fg) return prev; // No change, avoid re-render
-                return e.feature.Fg;
-            });
-
-            if (selectedSectorRef.current) {
-                map.data.overrideStyle(
-                    selectedSectorRef.current,
-                    defaultSectorStyles
-                );
-            }
-
-            selectedSectorRef.current = e.feature;
-
-            map.data.overrideStyle(
-                selectedSectorRef.current,
-                selectedSectorStyles
-            );
+            styleAndSetSector(e.feature);
         });
     };
 
@@ -80,7 +101,6 @@ export default function Map() {
             defaultSectorStyles
         );
 
-        console.log("sector should be reset");
         setSelectedSectorData(null);
     };
 
@@ -114,10 +134,9 @@ export default function Map() {
             >
                 <div className="map-container">
                     {mapComponent}
-                    <SectorData data={selectedSectorData} />
+                    <SectorData data={selectedSectorData} map={map} />
                 </div>
             </LoadScript>
-            <POI data={selectedSectorData} map={map} />
         </div>
     );
 }

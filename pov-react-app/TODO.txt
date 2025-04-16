@@ -1,4 +1,11 @@
 Create search function to highlight a sector via its ID
 Option to toggle showing/hidding POIs
-Only show one sector's POIs at a time
-Host with vercel
+
+
+Visualization of POIs:
+    color POI markers based on 
+    toggling which types of POIs are viewable
+    Summary of the types in an expanded viewable
+    
+
+

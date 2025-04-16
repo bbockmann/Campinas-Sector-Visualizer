@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
+
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export default function POI({ data, map }) {
+export default function POI({ data, map, selectedType }) {
     const markersRef = useRef([]); // Store markers
 
     useEffect(() => {
@@ -15,29 +16,35 @@ export default function POI({ data, map }) {
         fetch(`${API_BASE_URL}/poi/${sectorId}`)
             .then((res) => res.json())
             .then((data) => {
-                let latKeys = Object.keys(data.latitude);
+                const pois = Object.values(data);
 
-                for (let i = 0; i < Object.keys(data.name).length; i++) {
-                    // TODO: move all this logic of creating each pin to the python code
-                    // the API should provide a nice json object so that each
-                    // pin can be rapidly created
-                    let key = latKeys[i];
+                for (let i = 0; i < pois.length; i++) {
+                    let poi = pois[i];
 
                     const poiMarker = document.createElement("div");
                     poiMarker.className = "poi-marker";
+                    poiMarker.id = poi.type;
 
                     const marker =
                         new window.google.maps.marker.AdvancedMarkerElement({
                             map,
                             position: {
-                                lat: data.latitude[key],
-                                lng: data.longitude[key],
+                                lat: poi.lat,
+                                lng: poi.long,
                             },
                             content: poiMarker,
                         });
 
                     markersRef.current.push(marker);
+
+                    // markersRef.current.forEach((marker) => {
+                    //     console.log(marker.id);
+                    //     if ((marker.id = selectedType)) {
+                    //         console.log("changing class name");
+                    //         marker.content.className = "poi-marker selected";
+                    //     }
+                    // });
                 }
             });
-    });
+    }, [data, selectedType]);
 }
