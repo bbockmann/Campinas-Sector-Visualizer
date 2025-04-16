@@ -13,7 +13,7 @@ const defaultSectorStyles = {
 };
 
 const selectedSectorStyles = {
-    fillColor: "rgb(228, 207, 136)",
+    fillColor: "rgb(231, 195, 79)",
     strokeWeight: 2,
     strokeColor: "rgb(228, 207, 136)",
 };

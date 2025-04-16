@@ -36,15 +36,23 @@ export default function POI({ data, map, selectedType }) {
                         });
 
                     markersRef.current.push(marker);
-
-                    // markersRef.current.forEach((marker) => {
-                    //     console.log(marker.id);
-                    //     if ((marker.id = selectedType)) {
-                    //         console.log("changing class name");
-                    //         marker.content.className = "poi-marker selected";
-                    //     }
-                    // });
                 }
             });
-    }, [data, selectedType]);
+    }, [data]);
+
+    useEffect(() => {
+        markersRef.current.forEach((marker) => {
+            marker.content.className = "poi-marker";
+        });
+
+        if (selectedType) {
+            markersRef.current.forEach((marker) => {
+                console.log(marker.content.id);
+                if (marker.content.id === selectedType) {
+                    console.log("changing class name");
+                    marker.content.className = "poi-marker selected";
+                }
+            });
+        }
+    }, [selectedType]);
 }

@@ -9,7 +9,6 @@ const SectorData = ({ data, map }) => {
     const [selectedPOIType, setSelectedPOIType] = useState(null);
 
     const handleOnMouseEnter = (e) => {
-        console.log(e.currentTarget.dataset.name);
         setSelectedPOIType(e.currentTarget.dataset.name);
     };
 
@@ -32,7 +31,7 @@ const SectorData = ({ data, map }) => {
 
     return (
         <div>
-            <POI data={data} map={map} type={selectedPOIType} />
+            <POI data={data} map={map} selectedType={selectedPOIType} />
 
             {data ? (
                 <>
@@ -86,7 +85,7 @@ const SectorData = ({ data, map }) => {
                                 </ul>
                             )}
                             {expanded && (
-                                <ul className="poi-summary">
+                                <ul className="sector-data-summary">
                                     {Object.entries(data ?? {}).map(
                                         ([key, value]) => (
                                             <li key={key}>
