@@ -5,17 +5,39 @@ import requests
 import io
 from flask_cors import CORS
 from os import environ
+import json
 
 
 app = Flask(__name__)
 CORS(app)  # Apply CORS to all routes
 
 GOOGLE_CSV_LINK = "https://storage.googleapis.com/campinas-data/pois_by_census_sector%202022.csv"
+GOOGLE_GEOJSON_LINK = "https://storage.googleapis.com/campinas-data/final_cadunico_setores.json"
 
-# For GCS file
+# Load in the POI data
 poi_csv_response = requests.get(GOOGLE_CSV_LINK)
 poi_csv = poi_csv_response.text
-poi_df = pd.read_csv(io.StringIO(poi_csv))
+poi_df = pd.read_csv(io.StringIO(poi_csv)) 
+
+# Load in the GeoJSON
+sector_json_response = requests.get(GOOGLE_GEOJSON_LINK)
+sector_json = json.loads(sector_json_response.text)
+
+# Get all the max/min values for each metadata
+# dictionary of metadata, where the key is the name and the value is a set of [min, max]
+metadata_values = {"v0001": [], "n_ndvd_":[], "mn_nd_f":[], "mn_nd_h":[], "mn_nd_g":[], "adjstd_f":[], "adjstd_h":[], "adjstd_g":[]}
+
+for key in metadata_values:
+    all_values = []
+    for sector in sector_json["features"]:
+        all_values.append(sector["properties"][key])
+    cleaned_values = [v for v in all_values if v is not None]
+    min_val = min(cleaned_values)
+    max_val = max(cleaned_values)
+    metadata_values[key] = [min_val, max_val]
+
+print(metadata_values)
+# sector_json["features"]
 
 # 350950205000001P
 test_rows = poi_df[poi_df['census_sector_code'] == "350950205000001P"]
@@ -26,7 +48,7 @@ for index, row in test_rows.iterrows():
     lat = row["latitude"]
     long = row["longitude"]
     pois[index] = {"type": primary_type, "lat": lat, "long": long}
-print(pois)
+# print(pois)
 
 @app.route("/")
 def root():
@@ -50,7 +72,6 @@ def poi(sector_id):
         long = row["longitude"]
         pois[index] = {"type": primary_type, "lat": lat, "long": long}
     return jsonify(pois)
-    # return poi_df[poi_df['census_sector_code'] == sector_id].to_json()
 
 @app.route("/poisummary/<sector_id>")
 def poiSummary(sector_id):
@@ -68,6 +89,14 @@ def poiSummary(sector_id):
 
     return jsonify(type_count)
 
+@app.route("/sectorfields")
+def sectorFields():
+    return(list(sector_json["features"][0]["properties"].keys()))
+    # return({"hello": "world"})
+
+@app.route("/choropleth/<metadata>")
+def choropleth(metadata):
+    return metadata_values[metadata]
 
 @app.route("/health")
 def health():

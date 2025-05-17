@@ -1,9 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import POI from "./POI";
+import ChoroplethOptions from "./ChoroplethOptions";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const SectorData = ({ data, map }) => {
+const SectorData = ({
+    data,
+    map,
+    setSelectedMetadata,
+    colorGradient,
+    metadataMinMax,
+}) => {
     const [expanded, setExpanded] = useState(false);
     const [pois, setPOIs] = useState(null);
     const [selectedPOIType, setSelectedPOIType] = useState(null);
@@ -30,9 +37,14 @@ const SectorData = ({ data, map }) => {
     }, [data?.CD_SETO]); // re-run only when the sector changes
 
     return (
-        <div>
+        <div className="sector-legend-wrap">
             <POI data={data} map={map} selectedType={selectedPOIType} />
-
+            <ChoroplethOptions
+                data={data}
+                setSelectedMetadata={setSelectedMetadata}
+                colorGradient={colorGradient}
+                metadataMinMax={metadataMinMax}
+            />
             {data ? (
                 <>
                     {expanded && <div className="background"></div>}
